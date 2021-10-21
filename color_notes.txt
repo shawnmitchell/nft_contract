@@ -1,0 +1,11 @@
+green - #5ADD38
+yellow - #EBF725
+orange - #FDC536
+blue - #1186E2
+pink - #DD38B2
+purple - #A011E2
+
+
+blue_aura - <feColorMatrix values='0 0 0 0 0.0099638437   0 0 0 0 0.924672887   0 0 0 0 0.855803602  0 0 0 1 0' type='matrix' in='shadowBlurOuter1'></feColorMatrix>
+gold_aura - <feColorMatrix values="0 0 0 0 0.925490196   0 0 0 0 0.850980392   0 0 0 0 0.0117647059  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>
+pink_aura - <feColorMatrix values="0 0 0 0 0.925490196   0 0 0 0 0.0117647059   0 0 0 0 0.505882353  0 0 0 1 0" type="matrix" in="shadowBlurOuter1"></feColorMatrix>

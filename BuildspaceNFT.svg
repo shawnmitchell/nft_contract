@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<svg width='500px' height='500px' viewBox='0 0 500 500' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>
+    <title>BuildspaceNFT</title>
+    <defs>
+        <linearGradient x1='0%' y1='0%' x2='100%' y2='100%' id='linearGradient-1'>
+            <stop stop-color='#E24C11' offset='0%'></stop>
+            <stop stop-color='#5938DD' offset='100%'></stop>
+        </linearGradient>
+        <text id='text-2' font-family='AppleColorEmoji, Apple Color Emoji' font-size='216' font-weight='normal' fill='#000000'>
+            <tspan x='142' y='324'>🦄</tspan>
+        </text>
+        <filter x='-12.0%' y='-9.2%' width='126.4%' height='119.7%' filterUnits='objectBoundingBox' id='filter-3'>
+            <feOffset dx='2' dy='2' in='SourceAlpha' result='shadowOffsetOuter1'></feOffset>
+            <feGaussianBlur stdDeviation='9' in='shadowOffsetOuter1' result='shadowBlurOuter1'></feGaussianBlur>
+            <feColorMatrix values='0 0 0 0 0.924672887   0 0 0 0 0.860874317   0 0 0 0 0.0099638437  0 0 0 1 0' type='matrix' in='shadowBlurOuter1'></feColorMatrix>
+        </filter>
+    </defs>
+    <g id='Page-2' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>
+        <g id='BuildspaceNFT'>
+            <rect id='Rectangle' fill='url(#linearGradient-1)' x='0' y='0' width='500' height='500'></rect>
+            <text id='buildspace' font-family='SFProText-Heavy, SF Pro Text' font-size='36' font-weight='600' fill='#FFFFFF'>
+                <tspan x='147' y='407'>buildspace</tspan>
+            </text>
+            <g id='🦄' transform='translate(250.000000, 250.000000) rotate(0.000000) translate(-250.000000, -250.000000) ' fill='#000000' fill-opacity='1'>
+                <use filter='url(#filter-3)' xlink:href='#text-2'></use>
+                <use xlink:href='#text-2'></use>
+            </g>
+        </g>
+    </g>
+</svg>

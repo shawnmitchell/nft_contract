@@ -17,17 +17,14 @@ contract MyEpicNFT is ERC721URIStorage {
   string baseSvg = "<svg xmlns='http://www.w3.org/2000/svg' preserveAspectRatio='xMinYMin meet' viewBox='0 0 350 350'><style>.base { fill: white; font-family: serif; font-size: 24px; }</style><rect width='100%' height='100%' fill='black' /><text x='50%' y='50%' class='base' dominant-baseline='middle' text-anchor='middle'>";
   // I create three arrays, each with their own theme of random words.
   // Pick some random funny words, names of anime characters, foods you like, whatever! 
-  string[] firstWords = ["Pajama", "Aloha", "Bourbon", "Sedan", "Continent", "Puzzle"];
-  string[] secondWords = ["Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot"];
-  string[] thirdWords = ["Crepe", "Burrito", "Hoagie", "Gyro", "PBJ", "Quiche"];
-  string[][] allWords = [firstWords, secondWords, thirdWords];
 
-  string[] face = ["#FDDC43", "#43DDFD", "#FD9143", "#FFA4CE", "#4DAA57"];
-  string[] eyes = ["#0AFFED", "#255C99", "#31D843", "#A85751", "#251351", "#7D2E68"];
-  string[] beret = ["#78F0A0", "#F08278", "#000", "#FF0707"];
-  string[] pompom = ["#07B4F9", "#EDE471", "#FF7F00"];
-  string[] background = ["#FFF", "#825A96", "#3366De", "#CDE77F", "#B744B8"];
-
+  string[] left = ["#5ADD38", "#EBF725", "#FDC536"];
+  string[] right = ["#1186E2", "#DD38B2", "#A011E2"];
+  string[] angle = ["0", "10", "20", "30"];
+  string[] aura = ["<feColorMatrix values='0 0 0 0 0.0099638437   0 0 0 0 0.924672887   0 0 0 0 0.855803602  0 0 0 1 0' type='matrix' in='shadowBlurOuter1'></feColorMatrix>", 
+                   "<feColorMatrix values='0 0 0 0 0.925490196   0 0 0 0 0.850980392   0 0 0 0 0.0117647059  0 0 0 1 0' type='matrix' in='shadowBlurOuter1'></feColorMatrix>", 
+                   "<feColorMatrix values='0 0 0 0 0.925490196   0 0 0 0 0.0117647059   0 0 0 0 0.505882353  0 0 0 1 0' type='matrix' in='shadowBlurOuter1'></feColorMatrix>"];
+  
 
   uint private _maxTokens;
   event NewEpicNFTMinted(address sender, uint256 tokenId, uint maxTokens, string finalTokenUri);
@@ -38,53 +35,28 @@ contract MyEpicNFT is ERC721URIStorage {
     console.log("NFT Contract with %n max", maxTokens);
   }
 
-  function pickRandomWord(uint word, string memory seed, uint256 tokenId) public view returns (string memory) {
-    require(word < allWords.length, "Invalid Input");
-    // I seed the random generator. More on this in the lesson. 
+  function pickRandomLeftColor(string memory seed, uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    // Squash the # between 0 and the length of the array to avoid going out of bounds.
-    rand = rand % allWords[word].length;
-    return allWords[word][rand];
+    rand = rand % left.length;
+    return left[rand];
   }
 
-  function pickRandomBackgroundColor(string memory seed, uint256 tokenId) public view returns (string memory) {
+  function pickRandomRightColor(string memory seed, uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    rand = rand % background.length;
-    return background[rand];
+    rand = rand % right.length;
+    return right[rand];
   }
 
-  function pickRandomEyeColor(string memory seed, uint256 tokenId) public view returns (string memory) {
+  function pickRandomAngle(string memory seed, uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    rand = rand % eyes.length;
-    return eyes[rand];
+    rand = rand % angle.length;
+    return angle[rand];
   }
 
-  function pickRandomBeretColor(string memory seed, uint256 tokenId) public view returns (string memory) {
+  function pickRandomAura(string memory seed, uint256 tokenId) public view returns (string memory) {
     uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    rand = rand % beret.length;
-    return beret[rand];
-  }
-
-  function pickRandomPompomColor(string memory seed, uint256 tokenId) public view returns (string memory) {
-    uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    rand = rand % pompom.length;
-    return pompom[rand];
-  }
-
-  function pickRandomFaceColor(string memory seed, uint256 tokenId) public view returns (string memory) {
-    uint256 rand = random(string(abi.encodePacked(seed, Strings.toString(tokenId))));
-    rand = rand % face.length;
-    return face[rand];
-  }
-
-
-  function makeDef(string memory id, string memory value) internal pure returns (string memory) {
-    /*
-    <linearGradient id="eyes">
-            <stop stop-color="#991132"/>
-        </linearGradient>
-    */
-    return string(abi.encodePacked("<linearGradient id=\"", id, "\"><stop stop-color=\"", value, "\"/></linearGradient>"));
+    rand = rand % aura.length;
+    return aura[rand];
   }
   
   function random(string memory input) internal pure returns (uint256) {
@@ -104,71 +76,43 @@ contract MyEpicNFT is ERC721URIStorage {
     uint256 newItemId = _tokenIds.current();
     require(newItemId < _maxTokens, "NFTs all gone");
     string memory newBaseSvg = string(abi.encodePacked(
-      "<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 327 550' version='1.1'><title>Plantimal ", 
-      Strings.toString(newItemId), 
-      "</title><defs>",
-      makeDef("background", pickRandomBackgroundColor("background", newItemId)),
-      makeDef("eyes", pickRandomEyeColor("eyes", newItemId)),
-      makeDef("face", pickRandomFaceColor("face", newItemId)),
-      makeDef("beret", pickRandomBeretColor("beret", newItemId)),
-      makeDef("pompom", pickRandomPompomColor("pompom", newItemId)),
-      "<radialGradient cx='68.6444302%' cy='0%' fx='68.6444302%' fy='0%' r='100%' gradientTransform='translate(0.686444,0.000000),scale(0.124138,1.000000),rotate(90.000000),scale(1.000000,4.469958),translate(-0.686444,-0.000000)' id='radialGradient-1'> \
-            <stop stop-color='#E47C00' stop-opacity='0.5' offset='0%'></stop> \
-            <stop stop-color='#D67500' stop-opacity='0.5' offset='100%'></stop> \
-        </radialGradient> \
-        <radialGradient cx= '50%' cy='0%' fx='50%' fy='0%' r='100%' gradientTransform='translate(0.500000,0.000000),scale(0.124138,1.000000),rotate(90.000000),translate(-0.500000,-0.000000)' id='radialGradient-2'> \
-            <stop stop-color='#FE9429' stop-opacity='0.5' offset='0%'></stop> \
-            <stop stop-color='#D88700' stop-opacity='0.5' offset='100%'></stop> \
-        </radialGradient> \
-        <rect id='path-3' x='0' y='0' width='145' height='18'></rect> \
-        <radialGradient cx='69.5521499%' cy='0%' fx='69.5521499%' fy='0%' r='100%' gradientTransform='translate(0.695521,0.000000),scale(0.675651,1.000000),rotate(90.000000),translate(-0.695521,-0.000000)' id='radialGradient-4'> \
-            <stop stop-color='#D67500' stop-opacity='0.5' offset='0%'></stop> \
-            <stop stop-color='#FE9429' stop-opacity='0.5' offset='100%'></stop> \
-        </radialGradient> \
-        <polygon id='path-5' points='6 17.8140259 138 17.8140259 107.476807 107 36.5231934 107'></polygon> \
-    </defs> \
-    <g id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'> \
-        <g id='Plantimal' transform='translate(0.000000, 0.764664)'> \
-            <rect id='Background' stroke='#979797' fill='url(#background)' x='0.5' y='0.5' width='326' height='548'></rect> \
-            <g id='Stem' transform='translate(87.404633, 271.735336)'> \
-                <path d='M81.3604123,0 C85.6279855,10.5677136 87.7040138,21.48445 87.5884972,32.7502091 C87.4729807,44.0159681 85.1739143,54.8510449 80.691298,65.2554394 C73.4102077,77.4060131 69.7118591,89.1185939 69.596252,100.393182 C69.4228414,117.305064 76.3664253,165.783369 79.9763935,134.976564' id='Line' stroke='#00BA0B' stroke-width='8' stroke-linecap='round' stroke-linejoin='round'></path> \
-                <ellipse id='Oval' fill='#43B34A' transform='translate(121.595367, 43.000000) rotate(-25.000000) translate(-121.595367, -43.000000) ' cx='121.595367' cy='43' rx='39' ry='14.5'></ellipse> \
-                <ellipse id='Oval' fill='#4AAF50' transform='translate(41.473968, 56.239136) rotate(25.000000) translate(-41.473968, -56.239136) ' cx='41.4739685' cy='56.2391357' rx='39' ry='14.5'></ellipse> \
-            </g> \
-            <circle id='Face' fill='url(#face)' cx='164' cy='191.235336' r='80'></circle> \
-            <g id='EyeWhites' transform='translate(120.000000, 159.235336)' fill='#FFFFFF'> \
-                <circle id='Oval' cx='16.5' cy='16.5' r='16.5'></circle> \
-                <circle id='Oval' cx='61.5' cy='16.5' r='16.5'></circle> \
-            </g> \
-            <g id='Pupils' transform='translate(124.000000, 167.235336)' fill='url(#eyes)'> \
-                <circle id='Oval' cx='53' cy='9' r='9'> \
-                </circle> \
-                <circle id='Oval' cx='9' cy='9' r='9'> \
-                </circle> \
-            </g> \
-            <path d='M158.76123,144.851128 C130.79541,124.400668 122.572998,104.243743 134.093994,84.3803554 C145.61499,64.5169675 170.423809,67.2400409 208.520452,92.5495755 C240.658673,75.0519151 265.405599,69.6711879 282.76123,76.407394 C308.794678,86.511703 290.424316,132.357528 276.610107,144.851128 C267.400635,153.180195 258.116048,156.390458 248.756348,154.481918 L222.756506,153.067777 C221.426322,154.010537 211.094564,154.481918 191.76123,154.481918 C172.427897,154.481918 161.427897,151.271655 158.76123,144.851128 Z' id='Beret' fill='url(#beret)' transform='translate(212.476958, 113.147255) rotate(35.000000) translate(-212.476958, -113.147255) '></path> \
-            <g id='Teeth' transform='translate(142.000000, 208.235336)' fill='#FFFFFF'> \
-                <rect id='Rectangle' x='0' y='0' width='13' height='14'></rect> \
-                <rect id='Rectangle' x='15' y='0' width='13' height='14'></rect> \
-            </g> \
-            <g id='Pot' transform='translate(91.000000, 402.235336)'> \
-                <g id='Rectangle'> \
-                    <use fill='#C47524' xlink:href='#path-3'></use> \
-                    <use fill='url(#radialGradient-1)' xlink:href='#path-3'></use> \
-                    <use fill='url(#radialGradient-2)' xlink:href='#path-3'></use> \
-                </g> \
-                <g id= 'Rectangle'> \
-                    <use fill='#C47524' style='mix-blend-mode: soft-light;' xlink:href='#path-5'></use> \
-                    <use fill='url(#radialGradient-4)' xlink:href='#path-5'></use> \
-                </g> \
-            </g> \
-            <circle id='Pompom' fill='url(#pompom)' cx='226' cy='91.2353359' r='9'></circle> \
-        </g> \
-    </g> \
-</svg>"));
+
+"<svg width='500px' height='500px' viewBox='0 0 500 500' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'>",
+    "<title>buildspaceNFT #", Strings.toString(newItemId), "</title>",
+    "<defs>",
+        "<linearGradient x1='0%' y1='19.7280151%' x2='100%' y2='80.0442017%' id='linearGradient-1'>",
+            "<stop stop-color='", 
+            pickRandomLeftColor("LeftColor", newItemId), 
+            "' offset='0%'></stop>",
+            "<stop stop-color='", 
+            pickRandomRightColor("RightColor", newItemId), 
+            "' offset='100%'></stop>",
+        "</linearGradient>",
+        "<text id='text-2' font-family='AppleColorEmoji, Apple Color Emoji' font-size='216' font-weight='normal' fill='#000000'>",
+            unicode"<tspan x='142' y='324'>🦄</tspan>",
+        "</text>",
+        "<filter x='-12.0%' y='-9.2%' width='126.4%' height='119.7%' filterUnits='objectBoundingBox' id='filter-3'>",
+            "<feOffset dx='2' dy='2' in='SourceAlpha' result='shadowOffsetOuter1'></feOffset>",
+            "<feGaussianBlur stdDeviation='9' in='shadowOffsetOuter1' result='shadowBlurOuter1'></feGaussianBlur>",
+            pickRandomAura("Aura", newItemId),
+        "</filter>",
+    "</defs>",
+    "<g id='Page-2' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'>",
+        "<g id='BuildspaceNFT'>",
+            "<rect id='Rectangle' fill='url(#linearGradient-1)' x='0' y='0' width='500' height='500'></rect>",
+            "<text id='buildspace' font-family='SFProText-Heavy, SF Pro Text' font-size='36' font-weight='600' fill='#FFFFFF'>",
+                "<tspan x='147' y='407'>buildspace</tspan>",
+            "</text>",
+            unicode"<g id='🦄' transform='translate(250.000000, 250.000000) rotate(", pickRandomAngle("Angle", newItemId), ".000000) translate(-250.000000, -250.000000) ' fill='#000000' fill-opacity='1'>",
+                "<use filter='url(#filter-3)' xlink:href='#text-2'></use>",
+                "<use xlink:href='#text-2'></use>",
+            "</g>",
+        "</g>",
+    "</g>",
+"</svg>"));
     
     
-    string memory plantimalName = string(abi.encodePacked("Plantimal #", Strings.toString(newItemId)));
+    string memory plantimalName = string(abi.encodePacked("_buildspaceNFT #", Strings.toString(newItemId)));
     
     string memory json = Base64.encode(
         bytes(
@@ -176,7 +120,7 @@ contract MyEpicNFT is ERC721URIStorage {
                 abi.encodePacked(
                     '{"name": "',
                     plantimalName,
-                    '", "description": "A cute little French monster in a flower pot.", "image": "data:image/svg+xml;base64,',
+                    '", "description": "Special _buildspace unicorn.", "image": "data:image/svg+xml;base64,',
                     // We add data:image/svg+xml;base64 and then append our base64 encode our svg.
                     Base64.encode(bytes(newBaseSvg)),
                     '"}'
