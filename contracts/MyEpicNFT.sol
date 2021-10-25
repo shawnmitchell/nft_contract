@@ -30,7 +30,7 @@ contract MyEpicNFT is ERC721URIStorage {
   event NewEpicNFTMinted(address sender, uint256 tokenId, uint maxTokens, string finalTokenUri);
   event EpicNFTsRemaining(uint remaining);
 
-  constructor(uint maxTokens) ERC721 ("PlantimalsNFT", "POTZ") {
+  constructor(uint maxTokens) ERC721 ("buildspaceNFT", "BSPACE") {
     _maxTokens = maxTokens;
     console.log("NFT Contract with %n max", maxTokens);
   }
